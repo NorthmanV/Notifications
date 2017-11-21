@@ -34,10 +34,21 @@ class ViewController: UIViewController {
     }
     
     func sheduleNotification(inSeconds: TimeInterval, complition: @escaping (_ success: Bool) -> ()) {
+        //Add an attachment
+        guard let imageURL = Bundle.main.url(forResource: "johny", withExtension: "gif") else {
+            complition(false)
+            return
+        }
+        let attachment = try! UNNotificationAttachment(identifier: "myNotif", url: imageURL, options: .none)
         let notif = UNMutableNotificationContent()
+        // Only for extension
+        notif.categoryIdentifier = "myNotificationCategory"
+        
         notif.title = "New Notification"
         notif.subtitle = "Good News!"
         notif.body = "Notification is recivied. That is awesome! Let's try to do something new."
+        notif.sound = UNNotificationSound.default()
+        notif.attachments = [attachment]
         
         let notifTrigger = UNTimeIntervalNotificationTrigger(timeInterval: inSeconds, repeats: false)
         let request = UNNotificationRequest(identifier: "myNotif", content: notif, trigger: notifTrigger)
